@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { addSubscriber } from '../services/newsletter';
+import { MailIcon, CheckIcon, AlertIcon } from './Icons';
 
 export default function ReaderSignup() {
   const [email, setEmail] = useState('');
@@ -32,6 +33,7 @@ export default function ReaderSignup() {
       setMessage('Cet email est déjà inscrit à la newsletter');
     }
 
+    // Reset après 5 secondes
     setTimeout(() => {
       setStatus('idle');
       setMessage('');
@@ -39,84 +41,48 @@ export default function ReaderSignup() {
   };
 
   return (
-    <div style={{ backgroundColor: '#131825', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '2px', padding: '40px' }}>
-      <div style={{ maxWidth: '500px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A6FA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect width="20" height="16" x="2" y="4" rx="2" />
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-          </svg>
-          <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '24px', color: '#E8E6E3' }}>
+    <div className="bg-[#131825] border border-white/[0.06] rounded-sm p-8 md:p-10">
+      <div className="max-w-xl">
+        <div className="flex items-center gap-3 mb-4">
+          <MailIcon size={20} className="text-[#4A6FA5]" />
+          <h3 className="font-display text-xl md:text-2xl text-[#E8E6E3]">
             Newsletter
           </h3>
         </div>
         
-        <p style={{ color: '#9BA3B5', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
+        <p className="text-[#9BA3B5] text-sm leading-relaxed mb-6">
           Recevez les nouveaux articles directement dans votre boîte mail. 
           Pas de spam, uniquement les publications.
         </p>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="votre@email.com"
+            className="flex-1 px-4 py-3 bg-[#0B0F19] border border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm rounded-sm"
             disabled={status === 'success'}
-            style={{
-              flex: 1,
-              padding: '12px 16px',
-              backgroundColor: '#0B0F19',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#E8E6E3',
-              fontSize: '14px',
-              borderRadius: '2px',
-              outline: 'none'
-            }}
           />
           <button
             type="submit"
             disabled={status === 'success'}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#4A6FA5',
-              color: '#E8E6E3',
-              fontSize: '14px',
-              letterSpacing: '0.05em',
-              border: 'none',
-              borderRadius: '2px',
-              cursor: status === 'success' ? 'not-allowed' : 'pointer',
-              opacity: status === 'success' ? 0.5 : 1,
-              transition: 'background 0.2s',
-              whiteSpace: 'nowrap'
-            }}
-            onMouseEnter={(e) => {
-              if (status !== 'success') e.currentTarget.style.backgroundColor = '#5A82BE';
-            }}
-            onMouseLeave={(e) => {
-              if (status !== 'success') e.currentTarget.style.backgroundColor = '#4A6FA5';
-            }}
+            className="px-6 py-3 bg-[#4A6FA5] text-[#E8E6E3] text-sm tracking-wide hover:bg-[#5A82BE] transition-colors btn-press rounded-sm disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
           >
             S'inscrire
           </button>
         </form>
 
         {status === 'success' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '16px', color: '#5C9B6E', fontSize: '14px' }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
+          <div className="flex items-center gap-2 mt-4 text-[#5C9B6E] text-sm">
+            <CheckIcon size={16} />
             {message}
           </div>
         )}
 
         {status === 'error' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '16px', color: '#C45C5C', fontSize: '14px' }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="8" x2="12" y2="12" />
-              <line x1="12" y1="16" x2="12.01" y2="16" />
-            </svg>
+          <div className="flex items-center gap-2 mt-4 text-[#C45C5C] text-sm">
+            <AlertIcon size={16} />
             {message}
           </div>
         )}

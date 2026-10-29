@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Author, Article, AUTHOR_EMAIL } from './types';
+import { Author, Article, ViewMode, AUTHOR_EMAIL } from './types';
+import { ArrowRightIcon, MailIcon } from './components/Icons';
 import Auth from './components/Auth';
 import PublicHeader from './components/PublicHeader';
 import PublicHome from './components/PublicHome';
@@ -15,20 +16,21 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
   const [showReaderSignup, setShowReaderSignup] = useState(false);
 
+  // Load author session
   useEffect(() => {
-    try {
-      const session = localStorage.getItem('blog_session');
-      if (session) {
-        setAuthor(JSON.parse(session));
-      }
-      const stored = localStorage.getItem('blog_articles');
-      if (stored) {
-        setArticles(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error('Erreur de chargement:', error);
+    const session = localStorage.getItem('blog_session');
+    if (session) {
+      setAuthor(JSON.parse(session));
     }
+    loadArticles();
   }, []);
+
+  const loadArticles = () => {
+    const stored = localStorage.getItem('blog_articles');
+    if (stored) {
+      setArticles(JSON.parse(stored));
+    }
+  };
 
   const handleLogin = (a: Author) => {
     setAuthor(a);
@@ -78,17 +80,19 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  // If showing auth screen
   if (showAuth && !author) {
     return <Auth onLogin={handleLogin} onBack={() => setShowAuth(false)} />;
   }
 
+  // If showing reader signup
   if (showReaderSignup) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#0B0F19', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-        <div style={{ width: '100%', maxWidth: '400px' }}>
+      <div className="min-h-screen bg-[#0B0F19] flex items-center justify-center px-6">
+        <div className="w-full max-w-md">
           <button
             onClick={() => setShowReaderSignup(false)}
-            style={{ color: '#9BA3B5', fontSize: '14px', marginBottom: '48px', background: 'none', border: 'none', cursor: 'pointer' }}
+            className="text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline mb-12"
           >
             ← Retour au blog
           </button>
@@ -98,21 +102,26 @@ export default function App() {
     );
   }
 
-  if (author && author.email === AUTHOR_EMAIL && (currentView === 'dashboard' || currentView === 'write' || currentView === 'profile' || currentView === 'newsletter')) {
-    return (
-      <AuthorDashboard
-        author={author}
-        articles={articles}
-        onLogout={handleLogout}
-        onSaveArticle={handleSaveArticle}
-        onDeleteArticle={handleDeleteArticle}
-        onUpdateAuthor={handleUpdateAuthor}
-        onArticleClick={handleArticleClick}
-        onBackToPublic={() => setCurrentView('home')}
-      />
-    );
+  // If logged in as author — show dashboard
+  if (author && author.email === AUTHOR_EMAIL && currentView !== 'home' && currentView !== 'article' && currentView !== 'recherches' && currentView !== 'decouvertes' && currentView !== 'articles') {
+    // Check if we're in dashboard mode
+    if (currentView === 'dashboard' || currentView === 'write' || currentView === 'profile' || currentView === 'newsletter') {
+      return (
+        <AuthorDashboard
+          author={author}
+          articles={articles}
+          onLogout={handleLogout}
+          onSaveArticle={handleSaveArticle}
+          onDeleteArticle={handleDeleteArticle}
+          onUpdateAuthor={handleUpdateAuthor}
+          onArticleClick={handleArticleClick}
+          onBackToPublic={() => setCurrentView('home')}
+        />
+      );
+    }
   }
 
+  // Public view
   const filteredArticles = articles.filter(article => {
     if (currentView === 'recherches') return article.category === 'recherche';
     if (currentView === 'decouvertes') return article.category === 'decouverte';
@@ -121,7 +130,7 @@ export default function App() {
   });
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#0B0F19' }}>
+    <div className="min-h-screen bg-[#0B0F19]">
       <PublicHeader
         currentView={currentView}
         onNavigate={handleNavigate}
@@ -159,68 +168,156 @@ export default function App() {
         />
       )}
 
-      <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)', marginTop: '80px', padding: '48px 24px' }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <p style={{ color: '#9BA3B5', fontSize: '14px', marginBottom: '16px' }}>
-            {author?.name || 'Erno Ngoy'}
-          </p>
-          <p style={{ color: '#5C6478', fontSize: '12px' }}>
-            © {new Date().getFullYear()} Tous droits réservés
-          </p>
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] mt-20">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 py-12 md:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div className="md:col-span-5">
+              <p className="font-display text-xl text-[#E8E6E3] mb-4">
+                {author?.name || 'Erno Ngoy'}
+              </p>
+              <p className="text-[#9BA3B5] text-sm leading-relaxed max-w-sm">
+                {author?.bio || 'Carnets de recherche, notes de lecture et fragments de pensée.'}
+              </p>
+            </div>
+            <div className="md:col-span-3">
+              <p className="text-[#5C6478] text-xs uppercase tracking-[0.2em] mb-4">
+                Navigation
+              </p>
+              <nav className="space-y-2">
+                <button onClick={() => handleNavigate('home')} className="block text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors">
+                  Accueil
+                </button>
+                <button onClick={() => handleNavigate('recherches')} className="block text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors">
+                  Recherches
+                </button>
+                <button onClick={() => handleNavigate('decouvertes')} className="block text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors">
+                  Découvertes
+                </button>
+                <button onClick={() => handleNavigate('articles')} className="block text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors">
+                  Articles
+                </button>
+              </nav>
+            </div>
+            <div className="md:col-span-4">
+              <p className="text-[#5C6478] text-xs uppercase tracking-[0.2em] mb-4">
+                Contact
+              </p>
+              <a
+                href="mailto:ernongoy@gmail.com"
+                className="inline-flex items-center gap-2 text-sm text-[#E8E6E3] hover:text-white transition-colors link-underline"
+              >
+                ernongoy@gmail.com
+                <ArrowRightIcon size={14} className="text-[#4A6FA5]" />
+              </a>
+              <p className="text-[#5C6478] text-xs mt-4 leading-relaxed">
+                Pour toute question, collaboration ou simplement échanger.
+              </p>
+            </div>
+          </div>
+          <div className="hr-editorial mt-12 mb-6"></div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <p className="text-[#3D4557] text-xs">
+              © {new Date().getFullYear()} {author?.name || 'Erno Ngoy'}. Tous droits réservés.
+            </p>
+            <p className="text-[#3D4557] text-xs">
+              Carnets personnels — Publication restreinte
+            </p>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
 
-function CategoryView({ view, articles, onArticleClick }: { view: string; articles: Article[]; onArticleClick: (a: Article) => void }) {
+/* ============================================
+   CATEGORY VIEW
+   ============================================ */
+function CategoryView({
+  view,
+  articles,
+  onArticleClick,
+}: {
+  view: string;
+  articles: Article[];
+  onArticleClick: (a: Article) => void;
+}) {
   const titles: Record<string, { title: string; description: string }> = {
-    recherches: { title: 'Recherches', description: 'Travaux en cours, lectures approfondies.' },
-    decouvertes: { title: 'Découvertes', description: 'Ce que j\'ai trouvé et veux partager.' },
-    articles: { title: 'Articles', description: 'Textes plus longs et réflexions abouties.' },
+    recherches: {
+      title: 'Recherches',
+      description: 'Travaux en cours, lectures approfondies, notes de terrain.',
+    },
+    decouvertes: {
+      title: 'Découvertes',
+      description: 'Ce que j\'ai trouvé, ce qui m\'a surpris, ce que je veux partager.',
+    },
+    articles: {
+      title: 'Articles',
+      description: 'Textes plus longs, réflexions abouties, publications.',
+    },
   };
 
   const config = titles[view] || titles.articles;
 
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '64px 24px' }}>
-      <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '48px', fontWeight: 300, color: '#E8E6E3', marginBottom: '16px' }}>
-        {config.title}
-      </h1>
-      <p style={{ color: '#9BA3B5', fontSize: '18px', marginBottom: '64px' }}>
-        {config.description}
-      </p>
+    <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 py-16 md:py-24">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-16">
+        <div className="lg:col-span-4">
+          <p className="text-[#5C6478] text-xs tracking-[0.2em] uppercase mb-4">
+            Catégorie
+          </p>
+          <h1 className="font-display text-4xl md:text-5xl font-light text-[#E8E6E3] leading-tight">
+            {config.title}
+          </h1>
+        </div>
+        <div className="lg:col-span-8 lg:pt-3">
+          <p className="text-[#9BA3B5] text-base md:text-lg leading-relaxed max-w-xl">
+            {config.description}
+          </p>
+        </div>
+      </div>
 
       {articles.length === 0 ? (
-        <p style={{ color: '#9BA3B5', textAlign: 'center', padding: '64px 0' }}>
-          Aucune note dans cette catégorie.
-        </p>
+        <div className="py-20 text-center">
+          <p className="font-display text-xl text-[#9BA3B5] font-light">
+            Aucune note dans cette catégorie.
+          </p>
+        </div>
       ) : (
-        <div>
+        <div className="space-y-0">
           {articles.map((article, index) => (
             <button
               key={article.id}
               onClick={() => onArticleClick(article)}
-              style={{
-                display: 'block',
-                width: '100%',
-                textAlign: 'left',
-                padding: '32px 16px',
-                borderTop: '1px solid rgba(255,255,255,0.06)',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'background 0.2s'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.01)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+              className="group block w-full text-left py-8 border-t border-white/[0.06] hover:bg-white/[0.01] transition-colors -mx-4 px-4"
             >
-              <h2 style={{ fontFamily: 'Fraunces, serif', fontSize: '24px', fontWeight: 300, color: '#E8E6E3', marginBottom: '8px' }}>
-                {article.title}
-              </h2>
-              <p style={{ color: '#9BA3B5', fontSize: '14px' }}>
-                {article.excerpt}
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 items-baseline">
+                <div className="md:col-span-1">
+                  <span className="text-[#3D4557] text-sm font-display">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                </div>
+                <div className="md:col-span-8">
+                  <h2 className="font-display text-xl md:text-2xl font-light text-[#E8E6E3] group-hover:text-white transition-colors leading-snug mb-2">
+                    {article.title}
+                  </h2>
+                  <p className="text-[#9BA3B5] text-sm leading-relaxed line-clamp-2">
+                    {article.excerpt}
+                  </p>
+                </div>
+                <div className="md:col-span-3 md:text-right">
+                  <time className="text-[#5C6478] text-xs">
+                    {formatDate(article.date)}
+                  </time>
+                </div>
+              </div>
             </button>
           ))}
         </div>

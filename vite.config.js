@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: "/blog-erno-ngoy/", // Remplacez par le nom de votre repository GitHub
+  base: "/", // Application servie à la racine du domaine
   server: {
     host: "0.0.0.0",
     port: 3000,

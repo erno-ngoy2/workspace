@@ -1,16 +1,25 @@
-const express = require('express');
-const path = require('path');
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Servir les fichiers statiques du dossier dist
-app.use(express.static(path.join(__dirname, 'dist')));
+const distPath = path.join(__dirname, "dist");
 
-// Pour les routes SPA, renvoyer index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+app.use(express.static(distPath));
+
+app.use((req, res, next) => {
+  // Ne pas renvoyer index.html pour une ressource statique absente.
+  if (req.path.startsWith("/assets/") || /\.[^/]+$/.test(req.path)) {
+    return res.status(404).send("Resource not found");
+  }
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });

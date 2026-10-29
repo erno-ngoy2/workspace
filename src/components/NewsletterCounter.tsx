@@ -1,44 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getSubscribers } from '../services/newsletter';
+import { MailIcon } from './Icons';
 
 interface NewsletterCounterProps {
   onViewList: () => void;
 }
 
 export default function NewsletterCounter({ onViewList }: NewsletterCounterProps) {
-  const [count] = useState(() => getSubscribers().length);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const subscribers = getSubscribers();
+    setCount(subscribers.length);
+  }, []);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', backgroundColor: '#131825', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '2px', padding: '12px 20px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A6FA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="20" height="16" x="2" y="4" rx="2" />
-          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-        </svg>
-        <span style={{ fontSize: '12px', color: '#5C6478', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Abonnés</span>
+    <div className="flex items-center gap-4 bg-[#131825] border border-white/[0.06] rounded-sm px-5 py-3">
+      <div className="flex items-center gap-2">
+        <MailIcon size={16} className="text-[#4A6FA5]" />
+        <span className="text-xs text-[#5C6478] uppercase tracking-wide">Abonnés</span>
       </div>
-      <span style={{ fontFamily: 'Fraunces, serif', fontSize: '24px', color: '#E8E6E3' }}>{count}</span>
+      <span className="font-display text-2xl text-[#E8E6E3]">{count}</span>
       <button
         onClick={onViewList}
-        style={{
-          marginLeft: 'auto',
-          fontSize: '12px',
-          color: '#9BA3B5',
-          border: '1px solid rgba(255,255,255,0.08)',
-          padding: '6px 12px',
-          borderRadius: '2px',
-          background: 'none',
-          cursor: 'pointer',
-          transition: 'all 0.2s'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.color = '#E8E6E3';
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.color = '#9BA3B5';
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-        }}
+        className="ml-auto text-xs text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors border border-white/[0.08] hover:border-white/[0.15] px-3 py-1.5 rounded-sm"
       >
         Voir la liste
       </button>

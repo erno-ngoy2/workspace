@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Author, AUTHOR_EMAIL } from '../types';
 
 interface AuthProps {
@@ -13,12 +13,13 @@ export default function Auth({ onLogin, onBack }: AuthProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSetup, setIsSetup] = useState(false);
 
-  useState(() => {
+  // Check if author account already exists
+  React.useEffect(() => {
     const stored = localStorage.getItem('blog_author');
     if (stored) {
       setIsSetup(true);
     }
-  });
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,12 +30,14 @@ export default function Auth({ onLogin, onBack }: AuthProps) {
       return;
     }
 
+    // Only ernongoy@gmail.com can publish
     if (email.toLowerCase() !== AUTHOR_EMAIL) {
-      setError('Accès réservé à l\'auteur.');
+      setError('Accès réservé. Ce blog est géré par un auteur unique.');
       return;
     }
 
     if (isSetup) {
+      // Login
       const stored = JSON.parse(localStorage.getItem('blog_author') || '{}');
       if (stored.password === password) {
         localStorage.setItem('blog_session', JSON.stringify(stored));
@@ -43,6 +46,7 @@ export default function Auth({ onLogin, onBack }: AuthProps) {
         setError('Mot de passe incorrect.');
       }
     } else {
+      // First-time setup
       if (password.length < 4) {
         setError('Le mot de passe doit contenir au moins 4 caractères.');
         return;
@@ -60,88 +64,58 @@ export default function Auth({ onLogin, onBack }: AuthProps) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0B0F19', padding: '24px' }}>
-      <div style={{ width: '100%', maxWidth: '400px' }}>
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="w-full max-w-sm">
         <button
           onClick={onBack}
-          style={{ color: '#9BA3B5', fontSize: '14px', marginBottom: '48px', background: 'none', border: 'none', cursor: 'pointer' }}
+          className="text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline mb-12"
         >
           ← Retour au blog
         </button>
 
-        <div style={{ marginBottom: '40px' }}>
-          <p style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '16px' }}>
+        <div className="mb-10">
+          <p className="text-[#5C6478] text-xs tracking-[0.2em] uppercase mb-4">
             Espace auteur
           </p>
-          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '32px', fontWeight: 300, color: '#E8E6E3', lineHeight: 1.2 }}>
+          <h1 className="font-display text-3xl font-light text-[#E8E6E3] leading-tight">
             {isSetup ? 'Connexion' : 'Première connexion'}
           </h1>
-          <p style={{ color: '#9BA3B5', fontSize: '14px', marginTop: '12px', lineHeight: 1.6 }}>
+          <p className="text-[#9BA3B5] text-sm mt-3 leading-relaxed">
             {isSetup
               ? 'Entrez vos identifiants pour accéder à l\'espace de publication.'
               : 'Définissez votre mot de passe pour activer l\'espace de publication.'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-2">
               Email
             </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre@email.com"
-              style={{
-                width: '100%',
-                padding: '12px 0',
-                background: 'transparent',
-                border: 'none',
-                borderBottom: '1px solid rgba(255,255,255,0.08)',
-                color: '#E8E6E3',
-                fontSize: '14px',
-                outline: 'none'
-              }}
-            />
-          </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="votre@email.com"
+                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
+              />          </div>
 
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>
+          <div>
+            <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-2">
               Mot de passe
             </label>
-            <div style={{ position: 'relative' }}>
+            <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                style={{
-                  width: '100%',
-                  padding: '12px 0',
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid rgba(255,255,255,0.08)',
-                  color: '#E8E6E3',
-                  fontSize: '14px',
-                  outline: 'none',
-                  paddingRight: '40px'
-                }}
+                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: '#5C6478',
-                  fontSize: '12px',
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-[#5C6478] hover:text-[#9BA3B5] transition-colors text-xs"
               >
                 {showPassword ? 'masquer' : 'voir'}
               </button>
@@ -149,32 +123,18 @@ export default function Auth({ onLogin, onBack }: AuthProps) {
           </div>
 
           {error && (
-            <p style={{ color: '#C45C5C', fontSize: '14px', marginBottom: '20px' }}>{error}</p>
+            <p className="text-[#C45C5C] text-sm">{error}</p>
           )}
 
           <button
             type="submit"
-            style={{
-              width: '100%',
-              marginTop: '32px',
-              padding: '14px',
-              backgroundColor: '#4A6FA5',
-              color: '#E8E6E3',
-              fontSize: '14px',
-              letterSpacing: '0.05em',
-              border: 'none',
-              borderRadius: '2px',
-              cursor: 'pointer',
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#5A82BE'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4A6FA5'}
+            className="w-full mt-8 py-3.5 bg-[#4A6FA5] text-[#E8E6E3] text-sm tracking-wide hover:bg-[#5A82BE] transition-colors btn-press rounded-sm"
           >
             {isSetup ? 'Se connecter' : 'Activer l\'espace'}
           </button>
         </form>
 
-        <p style={{ color: '#3D4557', fontSize: '12px', marginTop: '32px', lineHeight: 1.6 }}>
+        <p className="text-[#3D4557] text-xs mt-8 leading-relaxed">
           L'accès à la publication est restreint. Les lecteurs peuvent consulter les notes sans authentification.
         </p>
       </div>

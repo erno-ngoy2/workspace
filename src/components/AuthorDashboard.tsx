@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { Article, Author } from '../types';
-import { LinkIcon, ImageIcon, UploadIcon, EditIcon, TrashIcon, PlusIcon, PenIcon, HomeIcon, UserIcon, LogoutIcon, CheckIcon, AlertIcon, FileIcon, MailIcon } from './Icons';
 import { sendNewArticleNotification, getSubscribers } from '../services/newsletter';
 import NewsletterManager from './NewsletterManager';
 import NewsletterCounter from './NewsletterCounter';
@@ -46,97 +45,75 @@ export default function AuthorDashboard({
     setEditingArticle(null);
     setView('list');
     
-    // Envoie un email aux abonnés de la newsletter
     const subscribers = getSubscribers();
     if (subscribers.length > 0) {
       const articleUrl = `${window.location.origin}/#/article/${article.id}`;
-      const result = await sendNewArticleNotification(
-        article.title,
-        article.excerpt,
-        articleUrl
-      );
-      
-      // Affiche une notification (pourrait être amélioré avec un toast)
+      const result = await sendNewArticleNotification(article.title, article.excerpt, articleUrl);
       alert(result.message);
     }
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Dashboard header */}
-      <header className="border-b border-white/[0.06] sticky top-0 z-40 bg-[#0B0F19]/95 backdrop-blur-md">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-8">
+    <div style={{ minHeight: '100vh', backgroundColor: '#0B0F19' }}>
+      <header style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 40, backgroundColor: 'rgba(11,15,25,0.95)', backdropFilter: 'blur(12px)' }}>
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
               <button
                 onClick={onBackToPublic}
-                className="font-display text-lg text-[#E8E6E3] hover:text-white transition-colors"
+                style={{ fontFamily: 'Fraunces, serif', fontSize: '18px', color: '#E8E6E3', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 {author.name}
               </button>
-              <nav className="hidden md:flex items-center gap-6">
+              <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
                 <button
                   onClick={() => setView('list')}
-                  className={`flex items-center gap-2 text-xs tracking-[0.15em] uppercase transition-colors ${
-                    view === 'list' ? 'text-[#E8E6E3]' : 'text-[#5C6478] hover:text-[#9BA3B5]'
-                  }`}
+                  style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: view === 'list' ? '#E8E6E3' : '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <FileIcon size={14} />
                   Notes
                 </button>
                 <button
                   onClick={handleNew}
-                  className={`flex items-center gap-2 text-xs tracking-[0.15em] uppercase transition-colors ${
-                    view === 'write' ? 'text-[#E8E6E3]' : 'text-[#5C6478] hover:text-[#9BA3B5]'
-                  }`}
+                  style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: view === 'write' ? '#E8E6E3' : '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <PenIcon size={14} />
                   Écrire
                 </button>
                 <button
                   onClick={() => setView('newsletter')}
-                  className={`flex items-center gap-2 text-xs tracking-[0.15em] uppercase transition-colors ${
-                    view === 'newsletter' ? 'text-[#E8E6E3]' : 'text-[#5C6478] hover:text-[#9BA3B5]'
-                  }`}
+                  style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: view === 'newsletter' ? '#E8E6E3' : '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <MailIcon size={14} />
                   Newsletter
                 </button>
                 <button
                   onClick={() => setView('profile')}
-                  className={`flex items-center gap-2 text-xs tracking-[0.15em] uppercase transition-colors ${
-                    view === 'profile' ? 'text-[#E8E6E3]' : 'text-[#5C6478] hover:text-[#9BA3B5]'
-                  }`}
+                  style={{ fontSize: '12px', letterSpacing: '0.15em', textTransform: 'uppercase', color: view === 'profile' ? '#E8E6E3' : '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <UserIcon size={14} />
                   Profil
                 </button>
               </nav>
             </div>
-            <div className="flex items-center gap-4">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <button
                 onClick={onBackToPublic}
-                className="text-xs text-[#5C6478] hover:text-[#9BA3B5] transition-colors hidden sm:inline"
+                style={{ fontSize: '12px', color: '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 Voir le site
               </button>
               <button
                 onClick={onLogout}
-                className="flex items-center gap-2 text-xs text-[#5C6478] hover:text-[#9BA3B5] transition-colors"
+                style={{ fontSize: '12px', color: '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                <LogoutIcon size={14} />
-                <span className="hidden sm:inline">Déconnexion</span>
+                Déconnexion
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Content */}
-      <main className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 py-12 md:py-16">
+      <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '48px 24px 64px' }}>
         {view === 'list' && (
           <>
-            <div className="mb-8">
+            <div style={{ marginBottom: '32px' }}>
               <NewsletterCounter onViewList={() => setView('newsletter')} />
             </div>
             <ArticleList
@@ -155,9 +132,7 @@ export default function AuthorDashboard({
             onCancel={() => setView('list')}
           />
         )}
-        {view === 'newsletter' && (
-          <NewsletterManager />
-        )}
+        {view === 'newsletter' && <NewsletterManager />}
         {view === 'profile' && (
           <ProfileEditor author={author} onUpdate={onUpdateAuthor} />
         )}
@@ -166,16 +141,7 @@ export default function AuthorDashboard({
   );
 }
 
-/* ============================================
-   ARTICLE LIST
-   ============================================ */
-function ArticleList({
-  articles,
-  onNew,
-  onEdit,
-  onDelete,
-  onClick,
-}: {
+function ArticleList({ articles, onNew, onEdit, onDelete, onClick }: {
   articles: Article[];
   onNew: () => void;
   onEdit: (a: Article) => void;
@@ -183,92 +149,77 @@ function ArticleList({
   onClick: (a: Article) => void;
 }) {
   const formatDate = (date: string) =>
-    new Date(date).toLocaleDateString('fr-FR', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+    new Date(date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  const categoryLabel = {
-    recherche: 'Recherche',
-    decouverte: 'Découverte',
-    article: 'Article',
-  };
+  const categoryLabel = { recherche: 'Recherche', decouverte: 'Découverte', article: 'Article' };
 
   return (
     <div>
-      <div className="flex items-baseline justify-between mb-12">
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '48px' }}>
         <div>
-          <p className="text-[#5C6478] text-xs tracking-[0.2em] uppercase mb-3">
+          <p style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Espace auteur
           </p>
-          <h1 className="font-display text-3xl md:text-4xl font-light text-[#E8E6E3]">
+          <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '32px', fontWeight: 300, color: '#E8E6E3' }}>
             Vos notes
           </h1>
         </div>
         <button
           onClick={onNew}
-          className="flex items-center gap-2 text-sm text-[#E8E6E3] hover:text-white transition-colors border border-white/[0.08] hover:border-white/[0.15] px-5 py-2.5 rounded-sm btn-press"
+          style={{ fontSize: '14px', color: '#E8E6E3', border: '1px solid rgba(255,255,255,0.08)', padding: '10px 20px', borderRadius: '2px', background: 'none', cursor: 'pointer' }}
         >
-          <PlusIcon size={14} />
           Nouvelle note
         </button>
       </div>
 
       {articles.length === 0 ? (
-        <div className="py-24 text-center">
-          <p className="font-display text-xl text-[#9BA3B5] font-light">
+        <div style={{ padding: '96px 0', textAlign: 'center' }}>
+          <p style={{ fontFamily: 'Fraunces, serif', fontSize: '20px', color: '#9BA3B5', fontWeight: 300 }}>
             Aucune note publiée.
           </p>
           <button
             onClick={onNew}
-            className="mt-6 text-sm text-[#4A6FA5] hover:text-[#5A82BE] transition-colors"
+            style={{ marginTop: '24px', fontSize: '14px', color: '#4A6FA5', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             Écrire la première →
           </button>
         </div>
       ) : (
-        <div className="space-y-0">
+        <div>
           {articles.map((article) => (
             <div
               key={article.id}
-              className="group py-6 border-t border-white/[0.06] flex items-start justify-between gap-4"
+              style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', padding: '24px 0', borderTop: '1px solid rgba(255,255,255,0.06)' }}
             >
               <button
                 onClick={() => onClick(article)}
-                className="flex-1 text-left"
+                style={{ flex: 1, textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[#4A6FA5] text-xs tracking-wide">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <span style={{ color: '#4A6FA5', fontSize: '12px', letterSpacing: '0.05em' }}>
                     {categoryLabel[article.category]}
                   </span>
-                  <span className="text-[#3D4557]">—</span>
-                  <time className="text-[#5C6478] text-xs">
+                  <span style={{ color: '#3D4557' }}>—</span>
+                  <time style={{ color: '#5C6478', fontSize: '12px' }}>
                     {formatDate(article.date)}
                   </time>
                 </div>
-                <h3 className="font-display text-lg md:text-xl text-[#E8E6E3] group-hover:text-white transition-colors leading-snug">
+                <h3 style={{ fontFamily: 'Fraunces, serif', fontSize: '20px', color: '#E8E6E3', lineHeight: 1.3 }}>
                   {article.title}
                 </h3>
               </button>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <button
                   onClick={() => onEdit(article)}
-                  className="flex items-center gap-1.5 text-xs text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors px-3 py-1.5 rounded-sm hover:bg-white/[0.04]"
-                  title="Modifier"
+                  style={{ fontSize: '12px', color: '#9BA3B5', padding: '6px 12px', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <EditIcon size={14} />
-                  <span className="hidden sm:inline">Modifier</span>
+                  Modifier
                 </button>
                 <button
-                  onClick={() => {
-                    if (confirm('Supprimer cette note ?')) onDelete(article.id);
-                  }}
-                  className="flex items-center gap-1.5 text-xs text-[#9BA3B5] hover:text-[#C45C5C] transition-colors px-3 py-1.5 rounded-sm hover:bg-white/[0.04]"
-                  title="Supprimer"
+                  onClick={() => { if (confirm('Supprimer cette note ?')) onDelete(article.id); }}
+                  style={{ fontSize: '12px', color: '#9BA3B5', padding: '6px 12px', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
-                  <TrashIcon size={14} />
-                  <span className="hidden sm:inline">Supprimer</span>
+                  Supprimer
                 </button>
               </div>
             </div>
@@ -279,14 +230,7 @@ function ArticleList({
   );
 }
 
-/* ============================================
-   ARTICLE EDITOR
-   ============================================ */
-function ArticleEditor({
-  article,
-  onSave,
-  onCancel,
-}: {
+function ArticleEditor({ article, onSave, onCancel }: {
   article: Article | null;
   onSave: (a: Article) => void;
   onCancel: () => void;
@@ -298,12 +242,6 @@ function ArticleEditor({
   const [tags, setTags] = useState(article?.tags.join(', ') || '');
   const [images, setImages] = useState<string[]>(article?.images || []);
   const [error, setError] = useState('');
-  const [showLinkDialog, setShowLinkDialog] = useState(false);
-  const [linkText, setLinkText] = useState('');
-  const [linkUrl, setLinkUrl] = useState('');
-  const [showImageDialog, setShowImageDialog] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageAlt, setImageAlt] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -321,25 +259,6 @@ function ArticleEditor({
       };
       reader.readAsDataURL(file);
     });
-  };
-
-  const insertLink = () => {
-    if (!linkUrl) return;
-    const text = linkText || linkUrl;
-    const md = `[${text}](${linkUrl})`;
-    setContent(prev => prev + (prev ? '\n' : '') + md);
-    setShowLinkDialog(false);
-    setLinkText('');
-    setLinkUrl('');
-  };
-
-  const insertImageLink = () => {
-    if (!imageUrl) return;
-    const md = `![${imageAlt || 'image'}](${imageUrl})`;
-    setContent(prev => prev + (prev ? '\n' : '') + md);
-    setShowImageDialog(false);
-    setImageUrl('');
-    setImageAlt('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -362,23 +281,22 @@ function ArticleEditor({
   };
 
   return (
-    <div className="max-w-3xl">
-      <div className="flex items-center justify-between mb-10">
-        <h1 className="font-display text-3xl font-light text-[#E8E6E3]">
+    <div style={{ maxWidth: '800px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px' }}>
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '32px', fontWeight: 300, color: '#E8E6E3' }}>
           {article ? 'Modifier la note' : 'Nouvelle note'}
         </h1>
         <button
           onClick={onCancel}
-          className="text-xs text-[#5C6478] hover:text-[#9BA3B5] transition-colors"
+          style={{ fontSize: '12px', color: '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
         >
           Annuler
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Title */}
-        <div>
-          <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Titre
           </label>
           <input
@@ -386,26 +304,30 @@ function ArticleEditor({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Donnez un titre à cette note"
-            className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors font-display text-2xl font-light"
+            style={{ width: '100%', padding: '12px 0', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '24px', fontFamily: 'Fraunces, serif', fontWeight: 300, outline: 'none' }}
           />
         </div>
 
-        {/* Category */}
-        <div>
-          <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Catégorie
           </label>
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             {(['recherche', 'decouverte', 'article'] as const).map(cat => (
               <button
                 key={cat}
                 type="button"
                 onClick={() => setCategory(cat)}
-                className={`px-4 py-2 text-xs tracking-wide rounded-sm border transition-all ${
-                  category === cat
-                    ? 'bg-[#4A6FA5] text-[#E8E6E3] border-[#4A6FA5]'
-                    : 'bg-transparent text-[#9BA3B5] border-white/[0.08] hover:border-white/[0.15]'
-                }`}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '12px',
+                  letterSpacing: '0.05em',
+                  borderRadius: '2px',
+                  border: category === cat ? '1px solid #4A6FA5' : '1px solid rgba(255,255,255,0.08)',
+                  backgroundColor: category === cat ? '#4A6FA5' : 'transparent',
+                  color: category === cat ? '#E8E6E3' : '#9BA3B5',
+                  cursor: 'pointer'
+                }}
               >
                 {cat === 'recherche' ? 'Recherche' : cat === 'decouverte' ? 'Découverte' : 'Article'}
               </button>
@@ -413,9 +335,8 @@ function ArticleEditor({
           </div>
         </div>
 
-        {/* Excerpt */}
-        <div>
-          <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Résumé (optionnel)
           </label>
           <textarea
@@ -423,43 +344,21 @@ function ArticleEditor({
             onChange={(e) => setExcerpt(e.target.value)}
             placeholder="Une phrase pour donner envie de lire..."
             rows={2}
-            className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm resize-none"
+            style={{ width: '100%', padding: '12px 0', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '14px', resize: 'none', outline: 'none' }}
           />
         </div>
 
-        {/* Content */}
-        <div>
-          <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Contenu
           </label>
-          {/* Toolbar */}
-          <div className="flex items-center gap-1 mb-3 pb-3 border-b border-white/[0.04]">
-            <button
-              type="button"
-              onClick={() => setShowLinkDialog(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[#9BA3B5] hover:text-[#E8E6E3] hover:bg-white/[0.04] rounded-sm transition-all"
-              title="Insérer un lien"
-            >
-              <LinkIcon size={14} />
-              <span className="hidden sm:inline">Lien</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowImageDialog(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[#9BA3B5] hover:text-[#E8E6E3] hover:bg-white/[0.04] rounded-sm transition-all"
-              title="Image via URL"
-            >
-              <ImageIcon size={14} />
-              <span className="hidden sm:inline">URL</span>
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-[#9BA3B5] hover:text-[#E8E6E3] hover:bg-white/[0.04] rounded-sm transition-all"
-              title="Téléverser une image"
+              style={{ fontSize: '12px', color: '#9BA3B5', background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              <UploadIcon size={14} />
-              <span className="hidden sm:inline">Téléverser</span>
+              Uploader une image
             </button>
             <input
               ref={fileInputRef}
@@ -467,7 +366,7 @@ function ArticleEditor({
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              className="hidden"
+              style={{ display: 'none' }}
             />
           </div>
           <textarea
@@ -475,24 +374,23 @@ function ArticleEditor({
             onChange={(e) => setContent(e.target.value)}
             placeholder={`Écrivez votre note ici.\n\nSyntaxe :\n[Texte du lien](https://exemple.com)\n![Description](url-image)`}
             rows={18}
-            className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm leading-relaxed font-mono resize-y"
+            style={{ width: '100%', padding: '12px 0', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '14px', lineHeight: 1.7, fontFamily: 'monospace', resize: 'vertical', outline: 'none' }}
           />
         </div>
 
-        {/* Images */}
         {images.length > 0 && (
-          <div>
-            <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
               Images jointes
             </label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
               {images.map((img, i) => (
-                <div key={i} className="relative group aspect-square">
-                  <img src={img} alt="" className="w-full h-full object-cover rounded-sm" />
+                <div key={i} style={{ position: 'relative', aspectRatio: '1' }}>
+                  <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '2px' }} />
                   <button
                     type="button"
                     onClick={() => setImages(prev => prev.filter((_, idx) => idx !== i))}
-                    className="absolute top-1 right-1 w-6 h-6 bg-[#0B0F19]/80 rounded-sm flex items-center justify-center text-[#9BA3B5] hover:text-[#C45C5C] opacity-0 group-hover:opacity-100 transition-opacity text-xs"
+                    style={{ position: 'absolute', top: '4px', right: '4px', width: '24px', height: '24px', backgroundColor: 'rgba(11,15,25,0.8)', borderRadius: '2px', border: 'none', color: '#9BA3B5', cursor: 'pointer', fontSize: '12px' }}
                   >
                     ×
                   </button>
@@ -502,9 +400,8 @@ function ArticleEditor({
           </div>
         )}
 
-        {/* Tags */}
-        <div>
-          <label className="block text-xs text-[#5C6478] tracking-wide uppercase mb-3">
+        <div style={{ marginBottom: '32px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '12px' }}>
             Mots-clés (séparés par des virgules)
           </label>
           <input
@@ -512,137 +409,33 @@ function ArticleEditor({
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="science, technologie, réflexion..."
-            className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
+            style={{ width: '100%', padding: '12px 0', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '14px', outline: 'none' }}
           />
         </div>
 
-        {error && <p className="text-[#C45C5C] text-sm">{error}</p>}
+        {error && <p style={{ color: '#C45C5C', fontSize: '14px', marginBottom: '20px' }}>{error}</p>}
 
-        {/* Submit */}
-        <div className="flex items-center gap-4 pt-6 border-t border-white/[0.06]">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <button
             type="submit"
-            className="px-8 py-3 bg-[#4A6FA5] text-[#E8E6E3] text-sm tracking-wide hover:bg-[#5A82BE] transition-colors btn-press rounded-sm"
+            style={{ padding: '12px 32px', backgroundColor: '#4A6FA5', color: '#E8E6E3', fontSize: '14px', letterSpacing: '0.05em', border: 'none', borderRadius: '2px', cursor: 'pointer' }}
           >
             {article ? 'Mettre à jour' : 'Publier'}
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="text-sm text-[#5C6478] hover:text-[#9BA3B5] transition-colors"
+            style={{ fontSize: '14px', color: '#5C6478', background: 'none', border: 'none', cursor: 'pointer' }}
           >
             Annuler
           </button>
         </div>
       </form>
-
-      {/* Link Dialog */}
-      {showLinkDialog && (
-        <div className="fixed inset-0 bg-[#0B0F19]/90 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="w-full max-w-md bg-[#131825] border border-white/[0.08] rounded-sm p-8">
-            <h3 className="font-display text-xl text-[#E8E6E3] mb-6">Insérer un lien</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Texte affiché</label>
-                <input
-                  type="text"
-                  value={linkText}
-                  onChange={(e) => setLinkText(e.target.value)}
-                  placeholder="Cliquez ici"
-                  className="w-full px-0 py-2 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">URL</label>
-                <input
-                  type="url"
-                  value={linkUrl}
-                  onChange={(e) => setLinkUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-0 py-2 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 mt-8">
-              <button
-                type="button"
-                onClick={insertLink}
-                className="px-5 py-2 bg-[#4A6FA5] text-[#E8E6E3] text-sm rounded-sm hover:bg-[#5A82BE] transition-colors"
-              >
-                Insérer
-              </button>
-              <button
-                type="button"
-                onClick={() => { setShowLinkDialog(false); setLinkText(''); setLinkUrl(''); }}
-                className="px-5 py-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Image Dialog */}
-      {showImageDialog && (
-        <div className="fixed inset-0 bg-[#0B0F19]/90 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="w-full max-w-md bg-[#131825] border border-white/[0.08] rounded-sm p-8">
-            <h3 className="font-display text-xl text-[#E8E6E3] mb-6">Insérer une image</h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Description</label>
-                <input
-                  type="text"
-                  value={imageAlt}
-                  onChange={(e) => setImageAlt(e.target.value)}
-                  placeholder="Description de l'image"
-                  className="w-full px-0 py-2 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">URL de l'image</label>
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full px-0 py-2 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] text-sm"
-                />
-              </div>
-            </div>
-            <div className="flex gap-3 mt-8">
-              <button
-                type="button"
-                onClick={insertImageLink}
-                className="px-5 py-2 bg-[#4A6FA5] text-[#E8E6E3] text-sm rounded-sm hover:bg-[#5A82BE] transition-colors"
-              >
-                Insérer
-              </button>
-              <button
-                type="button"
-                onClick={() => { setShowImageDialog(false); setImageUrl(''); setImageAlt(''); }}
-                className="px-5 py-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors"
-              >
-                Annuler
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-/* ============================================
-   PROFILE EDITOR
-   ============================================ */
-function ProfileEditor({
-  author,
-  onUpdate,
-}: {
-  author: Author;
-  onUpdate: (a: Author) => void;
-}) {
+function ProfileEditor({ author, onUpdate }: { author: Author; onUpdate: (a: Author) => void }) {
   const [name, setName] = useState(author.name);
   const [bio, setBio] = useState(author.bio || '');
   const [location, setLocation] = useState(author.location || '');
@@ -683,112 +476,74 @@ function ProfileEditor({
     setTimeout(() => setMessage(''), 3000);
   };
 
+  const inputStyle = { width: '100%', padding: '12px 0', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '14px', outline: 'none' };
+
   return (
-    <div className="max-w-2xl">
-      <div className="mb-12">
-        <p className="text-[#5C6478] text-xs tracking-[0.2em] uppercase mb-3">
+    <div style={{ maxWidth: '600px' }}>
+      <div style={{ marginBottom: '48px' }}>
+        <p style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '12px' }}>
           Profil
         </p>
-        <h1 className="font-display text-3xl font-light text-[#E8E6E3]">
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: '32px', fontWeight: 300, color: '#E8E6E3' }}>
           Informations personnelles
         </h1>
       </div>
 
-      <div className="space-y-10">
-        {/* Basic info */}
-        <section>
-          <h2 className="text-xs text-[#5C6478] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/[0.06]">
+      <div>
+        <section style={{ marginBottom: '40px' }}>
+          <h2 style={{ fontSize: '12px', color: '#5C6478', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '24px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             Identité
           </h2>
-          <div className="space-y-6">
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Nom</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
-              />
+          <div>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Nom</label>
+              <input type="text" value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
             </div>
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Email</label>
-              <p className="text-[#9BA3B5] text-sm py-3 border-b border-white/[0.04]">
-                {author.email}
-              </p>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Email</label>
+              <p style={{ color: '#9BA3B5', fontSize: '14px', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{author.email}</p>
             </div>
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Bio</label>
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                rows={3}
-                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm resize-none"
-              />
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Bio</label>
+              <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3} style={{ ...inputStyle, resize: 'none' }} />
             </div>
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Localisation</label>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Ville, pays"
-                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] placeholder-[#3D4557] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
-              />
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Localisation</label>
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Ville, pays" style={inputStyle} />
             </div>
             <button
               onClick={handleSave}
-              className="px-6 py-2.5 bg-[#4A6FA5] text-[#E8E6E3] text-sm rounded-sm hover:bg-[#5A82BE] transition-colors btn-press"
+              style={{ padding: '10px 24px', backgroundColor: '#4A6FA5', color: '#E8E6E3', fontSize: '14px', border: 'none', borderRadius: '2px', cursor: 'pointer' }}
             >
               Enregistrer
             </button>
           </div>
         </section>
 
-        {/* Password */}
         <section>
-          <h2 className="text-xs text-[#5C6478] uppercase tracking-[0.2em] mb-6 pb-3 border-b border-white/[0.06]">
+          <h2 style={{ fontSize: '12px', color: '#5C6478', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '24px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             Sécurité
           </h2>
-          <div className="space-y-6">
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Mot de passe actuel</label>
-              <input
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
-              />
+          <div>
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Mot de passe actuel</label>
+              <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} style={inputStyle} />
             </div>
-            <div>
-              <label className="block text-xs text-[#5C6478] uppercase tracking-wide mb-2">Nouveau mot de passe</label>
-              <input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-0 py-3 bg-transparent border-b border-white/[0.08] text-[#E8E6E3] focus:outline-none focus:border-[#4A6FA5] transition-colors text-sm"
-              />
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#5C6478', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '8px' }}>Nouveau mot de passe</label>
+              <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} style={inputStyle} />
             </div>
             <button
               onClick={handleChangePassword}
-              className="px-6 py-2.5 bg-transparent border border-white/[0.08] text-[#E8E6E3] text-sm rounded-sm hover:border-white/[0.15] transition-colors btn-press"
+              style={{ padding: '10px 24px', backgroundColor: 'transparent', border: '1px solid rgba(255,255,255,0.08)', color: '#E8E6E3', fontSize: '14px', borderRadius: '2px', cursor: 'pointer' }}
             >
               Changer le mot de passe
             </button>
           </div>
         </section>
 
-        {message && (
-          <p className="flex items-center gap-2 text-[#5C9B6E] text-sm">
-            <CheckIcon size={14} />
-            {message}
-          </p>
-        )}
-        {error && (
-          <p className="flex items-center gap-2 text-[#C45C5C] text-sm">
-            <AlertIcon size={14} />
-            {error}
-          </p>
-        )}
+        {message && <p style={{ color: '#5C9B6E', fontSize: '14px', marginTop: '20px' }}>{message}</p>}
+        {error && <p style={{ color: '#C45C5C', fontSize: '14px', marginTop: '20px' }}>{error}</p>}
       </div>
     </div>
   );

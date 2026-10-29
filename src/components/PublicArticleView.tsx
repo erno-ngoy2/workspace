@@ -1,5 +1,4 @@
 import { Article } from '../types';
-import { ArrowLeftIcon } from './Icons';
 
 interface PublicArticleViewProps {
   article: Article;
@@ -28,17 +27,17 @@ function parseContent(content: string): React.ReactNode[] {
 
         if (isImage) {
           elements.push(
-            <span key={`img-${pIndex}-${match.index}`} className="block my-8">
+            <span key={`img-${pIndex}-${match.index}`} style={{ display: 'block', margin: '32px 0' }}>
               <img
                 src={url}
                 alt={altText || ''}
-                className="w-full rounded-sm"
+                style={{ width: '100%', borderRadius: '2px' }}
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
               {altText && (
-                <p className="text-[#5C6478] text-xs mt-3 italic">{altText}</p>
+                <p style={{ color: '#5C6478', fontSize: '12px', marginTop: '12px', fontStyle: 'italic' }}>{altText}</p>
               )}
             </span>
           );
@@ -49,7 +48,7 @@ function parseContent(content: string): React.ReactNode[] {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#4A6FA5] hover:text-[#5A82BE] underline underline-offset-2 decoration-[#4A6FA5]/30 hover:decoration-[#5A82BE]/50 transition-colors"
+              style={{ color: '#4A6FA5', textDecoration: 'underline', textUnderlineOffset: '2px' }}
             >
               {altText || url}
             </a>
@@ -63,7 +62,7 @@ function parseContent(content: string): React.ReactNode[] {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#4A6FA5] hover:text-[#5A82BE] underline underline-offset-2 decoration-[#4A6FA5]/30 hover:decoration-[#5A82BE]/50 transition-colors break-all"
+            style={{ color: '#4A6FA5', textDecoration: 'underline', textUnderlineOffset: '2px', wordBreak: 'break-all' }}
           >
             {url}
           </a>
@@ -80,9 +79,12 @@ function parseContent(content: string): React.ReactNode[] {
     return (
       <p
         key={pIndex}
-        className={`text-[#E8E6E3]/90 leading-[1.8] mb-6 ${
-          pIndex === 0 ? 'text-lg md:text-xl' : 'text-base md:text-lg'
-        }`}
+        style={{
+          color: 'rgba(232, 230, 227, 0.9)',
+          lineHeight: 1.8,
+          marginBottom: '24px',
+          fontSize: pIndex === 0 ? '20px' : '18px'
+        }}
       >
         {elements.length > 0 ? elements : paragraph}
       </p>
@@ -111,82 +113,73 @@ export default function PublicArticleView({
   const renderedContent = parseContent(article.content);
 
   return (
-    <article className="min-h-screen">
-      {/* Back */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 pt-8">
+    <article style={{ minHeight: '100vh' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px 0' }}>
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline"
+          style={{ color: '#9BA3B5', fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer' }}
         >
-          <ArrowLeftIcon size={14} />
-          Retour aux notes
+          ← Retour aux notes
         </button>
       </div>
 
-      {/* Article header — editorial */}
-      <header className="max-w-[900px] mx-auto px-6 md:px-10 lg:px-16 pt-12 md:pt-20 pb-10">
-        <div className="flex items-center gap-4 mb-8">
-          <span className="text-[#4A6FA5] text-xs tracking-[0.2em] uppercase font-medium">
+      <header style={{ maxWidth: '900px', margin: '0 auto', padding: '80px 24px 40px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
+          <span style={{ color: '#4A6FA5', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 500 }}>
             {categoryLabel[article.category]}
           </span>
-          <span className="text-[#3D4557]">—</span>
-          <time className="text-[#5C6478] text-xs tracking-wide capitalize">
+          <span style={{ color: '#3D4557' }}>—</span>
+          <time style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.05em', textTransform: 'capitalize' }}>
             {date}
           </time>
         </div>
 
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light leading-[1.1] text-[#E8E6E3] mb-8 text-balance">
+        <h1 style={{ fontFamily: 'Fraunces, serif', fontSize: 'clamp(32px, 5vw, 60px)', fontWeight: 300, lineHeight: 1.1, color: '#E8E6E3', marginBottom: '32px' }}>
           {article.title}
         </h1>
 
         {article.excerpt && (
-          <p className="font-display text-xl md:text-2xl text-[#9BA3B5] font-light italic leading-relaxed mb-10 max-w-2xl">
+          <p style={{ fontFamily: 'Fraunces, serif', fontSize: '24px', color: '#9BA3B5', fontWeight: 300, fontStyle: 'italic', lineHeight: 1.5, marginBottom: '40px', maxWidth: '700px' }}>
             {article.excerpt}
           </p>
         )}
 
-        {/* Author line */}
-        <div className="flex items-center gap-4 pt-6 border-t border-white/[0.06]">
-          <div className="w-10 h-10 rounded-full bg-[#1A2033] border border-white/[0.08] flex items-center justify-center">
-            <span className="font-display text-sm text-[#E8E6E3]">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#1A2033', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontFamily: 'Fraunces, serif', fontSize: '14px', color: '#E8E6E3' }}>
               {authorName.charAt(0)}
             </span>
           </div>
           <div>
-            <p className="text-[#E8E6E3] text-sm">{authorName}</p>
-            <p className="text-[#5C6478] text-xs">Auteur</p>
+            <p style={{ color: '#E8E6E3', fontSize: '14px' }}>{authorName}</p>
+            <p style={{ color: '#5C6478', fontSize: '12px' }}>Auteur</p>
           </div>
         </div>
       </header>
 
-      {/* Featured image */}
       {article.images && article.images.length > 0 && (
-        <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 mb-12">
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 48px' }}>
           <img
             src={article.images[0]}
             alt={article.title}
-            className="w-full rounded-sm"
+            style={{ width: '100%', borderRadius: '2px' }}
           />
         </div>
       )}
 
-      {/* Content */}
-      <div className="max-w-[720px] mx-auto px-6 md:px-10 lg:px-16 pb-20">
-        <div className="drop-cap">
-          {renderedContent}
-        </div>
+      <div style={{ maxWidth: '720px', margin: '0 auto', padding: '0 24px 80px' }}>
+        {renderedContent}
 
-        {/* Tags */}
         {article.tags.length > 0 && (
-          <div className="mt-16 pt-8 border-t border-white/[0.06]">
-            <p className="text-[#5C6478] text-xs tracking-[0.2em] uppercase mb-4">
+          <div style={{ marginTop: '64px', paddingTop: '32px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <p style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '16px' }}>
               Mots-clés
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               {article.tags.map((tag, i) => (
                 <span
                   key={i}
-                  className="text-xs text-[#9BA3B5] border border-white/[0.08] px-3 py-1.5 rounded-sm"
+                  style={{ fontSize: '12px', color: '#9BA3B5', border: '1px solid rgba(255,255,255,0.08)', padding: '6px 12px', borderRadius: '2px' }}
                 >
                   {tag}
                 </span>
@@ -194,32 +187,14 @@ export default function PublicArticleView({
             </div>
           </div>
         )}
-
-        {/* Attached images */}
-        {article.images && article.images.length > 1 && (
-          <div className="mt-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {article.images.slice(1).map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt=""
-                  className="w-full rounded-sm"
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Footer navigation */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16 py-12 border-t border-white/[0.06]">
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '48px 24px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline"
+          style={{ color: '#9BA3B5', fontSize: '14px', background: 'none', border: 'none', cursor: 'pointer' }}
         >
-          <ArrowLeftIcon size={14} />
-          Retour aux notes
+          ← Retour aux notes
         </button>
       </div>
     </article>

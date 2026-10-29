@@ -1,5 +1,3 @@
-import { MailIcon } from './Icons';
-
 interface PublicHeaderProps {
   currentView: string;
   onNavigate: (view: string) => void;
@@ -18,113 +16,109 @@ export default function PublicHeader({
   authorName,
 }: PublicHeaderProps) {
   return (
-    <header className="border-b border-white/[0.06] sticky top-0 z-40 backdrop-blur-md bg-[#0B0F19]/80">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo / Nom */}
+    <header style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'sticky', top: 0, zIndex: 40, backgroundColor: 'rgba(11,15,25,0.8)', backdropFilter: 'blur(12px)' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px' }}>
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-baseline gap-3 group"
+            style={{ display: 'flex', alignItems: 'baseline', gap: '12px', background: 'none', border: 'none', cursor: 'pointer' }}
           >
-            <span className="font-display text-xl md:text-2xl font-medium tracking-tight text-[#E8E6E3] group-hover:text-white transition-colors">
+            <span style={{ fontFamily: 'Fraunces, serif', fontSize: '24px', fontWeight: 500, letterSpacing: '-0.02em', color: '#E8E6E3' }}>
               {authorName}
             </span>
-            <span className="hidden sm:inline text-[#5C6478] text-xs tracking-[0.2em] uppercase">
+            <span style={{ color: '#5C6478', fontSize: '12px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
               Carnets
             </span>
           </button>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
             <button
               onClick={() => onNavigate('recherches')}
-              className={`text-sm transition-colors link-underline ${
-                currentView === 'recherches' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5] hover:text-[#E8E6E3]'
-              }`}
+              style={{
+                fontSize: '14px',
+                color: currentView === 'recherches' ? '#E8E6E3' : '#9BA3B5',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
             >
               Recherches
             </button>
             <button
               onClick={() => onNavigate('decouvertes')}
-              className={`text-sm transition-colors link-underline ${
-                currentView === 'decouvertes' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5] hover:text-[#E8E6E3]'
-              }`}
+              style={{
+                fontSize: '14px',
+                color: currentView === 'decouvertes' ? '#E8E6E3' : '#9BA3B5',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
             >
               Découvertes
             </button>
             <button
               onClick={() => onNavigate('articles')}
-              className={`text-sm transition-colors link-underline ${
-                currentView === 'articles' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5] hover:text-[#E8E6E3]'
-              }`}
+              style={{
+                fontSize: '14px',
+                color: currentView === 'articles' ? '#E8E6E3' : '#9BA3B5',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
             >
               Articles
             </button>
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-4">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <button
               onClick={onNewsletterClick}
-              className="hidden sm:inline-flex items-center gap-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline"
+              style={{
+                fontSize: '14px',
+                color: '#9BA3B5',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#E8E6E3'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#9BA3B5'}
             >
-              <MailIcon size={14} />
               Newsletter
             </button>
             <a
               href="mailto:ernongoy@gmail.com"
-              className="hidden sm:inline-flex items-center gap-2 text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors link-underline"
+              style={{
+                fontSize: '14px',
+                color: '#9BA3B5',
+                textDecoration: 'none',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#E8E6E3'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#9BA3B5'}
             >
               Contact
             </a>
             <button
               onClick={onLoginClick}
-              className="text-sm text-[#9BA3B5] hover:text-[#E8E6E3] transition-colors"
+              style={{
+                fontSize: '14px',
+                color: '#9BA3B5',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#E8E6E3'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#9BA3B5'}
             >
               {isLoggedIn ? 'Espace auteur' : 'Connexion'}
             </button>
           </div>
         </div>
-
-        {/* Mobile nav */}
-        <nav className="md:hidden flex items-center gap-5 pb-3 overflow-x-auto">
-          <button
-            onClick={() => onNavigate('recherches')}
-            className={`text-xs tracking-wide whitespace-nowrap ${
-              currentView === 'recherches' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5]'
-            }`}
-          >
-            Recherches
-          </button>
-          <button
-            onClick={() => onNavigate('decouvertes')}
-            className={`text-xs tracking-wide whitespace-nowrap ${
-              currentView === 'decouvertes' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5]'
-            }`}
-          >
-            Découvertes
-          </button>
-          <button
-            onClick={() => onNavigate('articles')}
-            className={`text-xs tracking-wide whitespace-nowrap ${
-              currentView === 'articles' ? 'text-[#E8E6E3]' : 'text-[#9BA3B5]'
-            }`}
-          >
-            Articles
-          </button>
-          <button
-            onClick={onNewsletterClick}
-            className="text-xs tracking-wide text-[#9BA3B5] whitespace-nowrap"
-          >
-            Newsletter
-          </button>
-          <a
-            href="mailto:ernongoy@gmail.com"
-            className="text-xs tracking-wide text-[#9BA3B5] whitespace-nowrap"
-          >
-            Contact
-          </a>
-        </nav>
       </div>
     </header>
   );
